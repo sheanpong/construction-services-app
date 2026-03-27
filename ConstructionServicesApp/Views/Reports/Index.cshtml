@@ -1,0 +1,58 @@
+﻿@model IEnumerable<ConstructionServicesApp.Models.ViewModels.ReportViewModel>
+
+@{
+    ViewData["Title"] = "Reports";
+}
+
+<h2>Billing Reports</h2>
+
+<form method="get" class="mb-3">
+    <input type="text" name="search" class="form-control" placeholder="Search client..." />
+</form>
+
+<form method="get" class="row mb-3">
+    <div class="col">
+        <input type="date" name="startDate" class="form-control" />
+    </div>
+    <div class="col">
+        <input type="date" name="endDate" class="form-control" />
+    </div>
+    <div class="col">
+        <button class="btn btn-primary">Filter</button>
+    </div>
+</form>
+
+<h4>
+    Total Income: ₱ @Model.Where(x => x.PaymentStatus == "Paid").Sum(x => x.TotalAmount).ToString("N2")
+</h4>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Client</th>
+            <th>Date</th>
+            <th>Total Amount</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.ClientName</td>
+                <td>@item.BookingDate.ToShortDateString()</td>
+                <td>₱ @item.TotalAmount.ToString("N2")</td>
+                <td>
+                    @if (item.PaymentStatus == "Paid")
+                    {
+                        <span class="badge bg-success">Paid</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Unpaid</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
