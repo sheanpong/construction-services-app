@@ -1,0 +1,26 @@
+﻿@model ConstructionServicesApp.Models.Payment
+
+@{
+    ViewData["Title"] = "Payment Details";
+}
+
+<h2>Payment Details</h2>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-3">Billing</dt>
+        <dd class="col-sm-9">@Model.BillingID</dd>
+
+        <dt class="col-sm-3">Amount Paid</dt>
+        <dd class="col-sm-9">₱ @Model.AmountPaid</dd>
+
+        <dt class="col-sm-3">Payment Date</dt>
+        <dd class="col-sm-9">@Model.PaymentDate.ToShortDateString()</dd>
+
+        <dt class="col-sm-3">Method</dt>
+        <dd class="col-sm-9">@Model.PaymentMethod</dd>
+    </dl>
+</div>
+
+<a asp-action="Edit" asp-route-id="@Model.PaymentID" class="btn btn-primary">Edit</a>
+<a asp-action="Index" class="btn btn-secondary">Back</a>

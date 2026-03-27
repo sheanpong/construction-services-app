@@ -1,0 +1,25 @@
+﻿@page
+@model IEnumerable<ConstructionServicesApp.Models.Booking>
+@{
+    <h3>Weekly Schedule</h3>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Client</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.BookingDate.ToShortDateString()</td>
+                    <td>@item.Client.FullName</td>
+                    <td>@item.Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

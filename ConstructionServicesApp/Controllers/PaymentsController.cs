@@ -1,5 +1,6 @@
 ﻿using ConstructionServicesApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 public class PaymentsController : Controller
@@ -21,6 +22,12 @@ public class PaymentsController : Controller
             .ToListAsync();
 
         return View(billings);
+
+        ViewData["BillingID"] = new SelectList(
+    _context.Billings.Include(b => b.Booking).ThenInclude(b => b.Client),
+    "BillingID",
+    "Booking.Client.FullName"
+);
     }
 
     public IActionResult Pay(int id)

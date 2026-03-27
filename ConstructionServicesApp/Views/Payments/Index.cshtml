@@ -1,32 +1,48 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Client</th>
-                <th>Total</th>
-                <th>Status</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
+﻿@model IEnumerable<ConstructionServicesApp.Models.Payment>
+
+@{
+    ViewData["Title"] = "Payments";
+}
+
+<h1>Payments</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Add Payment</a>
+</p>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Client</th>
+            <th>Amount Paid</th>
+            <th>Payment Date</th>
+            <th>Method</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var item in Model)
             {
-            <tr>
-                <td>@item.Booking.Client.FullName</td>
-                <td>@item.TotalAmount</td>
-                <td>@item.PaymentStatus</td>
-                <td>
-                    <a asp-action="Pay" asp-route-id="@item.BillingID" class="btn btn-success">Pay</a>
-                </td>
-            </tr>
+                <tr>
+                    <td>@item.Billing?.Booking?.Client?.FullName</td>
+                    <td>₱ @item.AmountPaid</td>
+                    <td>@item.PaymentDate.ToShortDateString()</td>
+                    <td>@item.PaymentMethod</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.PaymentID" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-action="Details" asp-route-id="@item.PaymentID" class="btn btn-info btn-sm">Details</a>
+                        <a asp-action="Delete" asp-route-id="@item.PaymentID" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
             }
-        </tbody>
-    </table>
-</body>
-</html>
+        }
+        else
+        {
+            <tr>
+                <td colspan="5" class="text-center">No payments found</td>
+            </tr>
+        }
+    </tbody>
+</table>

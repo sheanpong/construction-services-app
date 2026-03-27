@@ -1,0 +1,28 @@
+﻿@model ConstructionServicesApp.Models.Payment
+
+@{
+    ViewData["Title"] = "Delete Payment";
+}
+
+<h2>Delete Payment</h2>
+
+<h4>Are you sure you want to delete this?</h4>
+
+<div>
+    <dl class="row">
+        <dt class="col-sm-3">Amount</dt>
+        <dd class="col-sm-9">₱ @Model.AmountPaid</dd>
+
+        <dt class="col-sm-3">Date</dt>
+        <dd class="col-sm-9">@Model.PaymentDate.ToShortDateString()</dd>
+
+        <dt class="col-sm-3">Method</dt>
+        <dd class="col-sm-9">@Model.PaymentMethod</dd>
+    </dl>
+</div>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="PaymentID" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

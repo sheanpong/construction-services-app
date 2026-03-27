@@ -1,0 +1,43 @@
+﻿@model ConstructionServicesApp.Models.Payment
+
+@{
+    ViewData["Title"] = "Create Payment";
+}
+
+<h2>Create Payment</h2>
+
+<form asp-action="Create" method="post">
+
+    <div class="form-group mb-3">
+        <label>Billing</label>
+        <select asp-for="BillingID" class="form-control" asp-items="ViewBag.BillingID">
+            <option value="">-- Select Billing --</option>
+        </select>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="AmountPaid"></label>
+        <input asp-for="AmountPaid" class="form-control" />
+        <span asp-validation-for="AmountPaid" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="PaymentDate"></label>
+        <input asp-for="PaymentDate" type="date" class="form-control" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="PaymentMethod"></label>
+        <input asp-for="PaymentMethod" class="form-control" placeholder="Cash / GCash / Bank" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
