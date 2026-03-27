@@ -1,4 +1,4 @@
-﻿namespace ConstructionServicesApp.Models
+namespace ConstructionServicesApp.Models
 {
     using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +19,18 @@
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<Inventory>().ToTable("Inventory");
+
+            // Configure decimal precision
+            foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            {
+                var properties = entityType.GetProperties()
+                    .Where(p => p.ClrType == typeof(decimal));
+
+                foreach (var property in properties)
+                {
+                    property.SetColumnType("decimal(18,2)");
+                }
+            }
         }
 
     }

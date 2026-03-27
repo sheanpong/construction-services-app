@@ -1,4 +1,4 @@
-﻿using ConstructionServicesApp.Models;
+using ConstructionServicesApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,49 +12,55 @@ public class PaymentsController : Controller
         _context = context;
     }
 
-    // 📋 List unpaid billings
+    // 📋 List payment history
     public async Task<IActionResult> Index()
     {
-        var billings = await _context.Billings
-            .Include(b => b.Booking)
+        var payments = await _context.Payments
+            .Include(p => p.Billing)
+            .ThenInclude(b => b.Booking)
             .ThenInclude(b => b.Client)
-            .Where(b => b.PaymentStatus == "Unpaid")
             .ToListAsync();
 
-        return View(billings);
-
-        ViewData["BillingID"] = new SelectList(
-    _context.Billings.Include(b => b.Booking).ThenInclude(b => b.Client),
-    "BillingID",
-    "Booking.Client.FullName"
-);
+        return View(payments);
     }
 
-    public IActionResult Pay(int id)
+    public IActionResult Create()
     {
-        var billing = _context.Billings.Find(id);
-        return View(billing);
+        ViewData["BillingID"] = new SelectList(
+            _context.Billings
+                .Include(b => b.Booking)
+                .ThenInclude(b => b.Client)
+                .Where(b => b.PaymentStatus == "Unpaid"),
+            "BillingID",
+            "BillingID"
+        );
+        return View();
     }
 
     [HttpPost]
-    public async Task<IActionResult> Pay(int id, decimal amount, string method)
+    public async Task<IActionResult> Create(Payment payment)
     {
-        var payment = new Payment
+        if (ModelState.IsValid)
         {
-            BillingID = id,
-            AmountPaid = amount,
-            PaymentDate = DateTime.Now,
-            PaymentMethod = method
-        };
+            _context.Payments.Add(payment);
 
-        _context.Payments.Add(payment);
+            var billing = await _context.Billings.FindAsync(payment.BillingID);
+            if (billing != null)
+            {
+                billing.PaymentStatus = "Paid";
+            }
 
-        var billing = await _context.Billings.FindAsync(id);
-        billing.PaymentStatus = "Paid";
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
 
-        await _context.SaveChangesAsync();
-
-        return RedirectToAction("Index");
+        ViewData["BillingID"] = new SelectList(
+            _context.Billings.Include(b => b.Booking).ThenInclude(b => b.Client),
+            "BillingID",
+            "BillingID",
+            payment.BillingID
+        );
+        return View(payment);
     }
 
 }
